@@ -12,8 +12,6 @@ public class Client implements Runnable {
         private PrintWriter printWriter;
         private Scanner in;
         private String name;
-        private static final Pattern MESSAGE = Pattern.compile ("^/w (\\w+) (.+)", Pattern.MULTILINE);
-        private static final String MESSAGE_SEND= "/w %s %s";
 
         public Client(Socket socket) {
             try {
