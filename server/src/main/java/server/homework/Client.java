@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
-    public class Client implements Runnable {
+public class Client implements Runnable {
         private Socket socket;
         private PrintWriter printWriter;
         private Scanner in;
         private String name;
+        private static final Pattern MESSAGE = Pattern.compile ("^/w (\\w+) (.+)", Pattern.MULTILINE);
+        private static final String MESSAGE_SEND= "/w %s %s";
 
         public Client(Socket socket) {
             try {
@@ -34,15 +38,27 @@ import java.util.Scanner;
                         break;
                 }
             }
-
+            Future<?> awaitingAuth = Executors.newSingleThreadExecutor().submit(() -> {
+                while (true) {
+                    if (in.hasNext()) {
+                        String clientMessage = in.nextLine();
+                        return in.hasNext(clientMessage);
+                    }
+                }
+            });
 
             try {
-                System.out.println("server.homework.Client disconnected");
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                String login = (String) awaitingAuth.get(120, TimeUnit.SECONDS);
+            } catch (TimeoutException | InterruptedException | ExecutionException e) {
 
+                try {
+                    System.out.println("server.homework.Client disconnected");
+                    socket.close();
+                } catch (IOException b) {
+                    b.printStackTrace();
+                }
+
+            }
         }
 
     }
