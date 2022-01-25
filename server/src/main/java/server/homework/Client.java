@@ -52,8 +52,8 @@ public class Client implements Runnable {
                 try {
                     System.out.println("server.homework.Client disconnected");
                     socket.close();
-                } catch (IOException b) {
-                    b.printStackTrace();
+                } catch (IOException c) {
+                    c.printStackTrace();
                 }
 
             }
