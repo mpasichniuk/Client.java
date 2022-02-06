@@ -13,7 +13,7 @@ public class Client implements Runnable {
         private Scanner in;
         private String name;
 
-        public Client(Socket socket) {
+        public Client(Socket socket, Server server) {
             try {
                 this.socket = socket;
                 printWriter = new PrintWriter(socket.getOutputStream());
