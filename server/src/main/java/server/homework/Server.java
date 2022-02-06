@@ -23,46 +23,26 @@ public class Server {
 
     public void serverSocket() {
         client = new CopyOnWriteArrayList<>();
-
+        while (true) {
             try {
-            try {
-                serverSocket = new ServerSocket(8000);
-                authService = new BaseAuthService();
-                authService.start();
+                socket = serverSocket.accept();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            System.out.println("Waiting...");
-            client = new ArrayList<>();
-
-            while (true) {
+                System.out.println("Connected");
+                new Client(socket, this);
+            } finally {
                 try {
-                    socket = serverSocket.accept();
-                    System.out.println("Connected");
-                    new Thread(new Client(socket)).start();
+                    socket.close();
                 } catch (IOException e) {
-                        System.out.println("Ошибка в работе сервера");
-                    } finally {
-                        if (authService != null) {
-                            authService.stop();
-                        }
-                    }
+                    e.printStackTrace();
                 }
-
-        } finally {
-            try {
-                socket.close();
-                serverSocket.close();
-                System.out.println("closed");
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                AuthService.disconnect();
             }
-
         }
-
-        }
-
     }
-
-
-
+}
