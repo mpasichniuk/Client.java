@@ -97,9 +97,9 @@ public class HelloController implements Initializable {
         FileInputStream in = new FileInputStream(history);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
-        String temp;
-        while ((temp = bufferedReader.readLine()) != null) {
-            historyList.add(temp);
+        String tem;
+        while ((tem = bufferedReader.readLine()) != null) {
+            historyList.add(tem);
         }
 
         if (historyList.size() > posHistory) {
